@@ -16,9 +16,13 @@
 
 #include "graphicstab.h"
 
+#include "stdafx.h"
+#include "Emu/System.h"
+
 GraphicsTab::GraphicsTab(QWidget *parent) : QWidget(parent)
 {
 	// Render
+	Emu.Stop();
 	QGroupBox *render = new QGroupBox(tr("Render"));
 
 	QComboBox *renderBox = new QComboBox;
