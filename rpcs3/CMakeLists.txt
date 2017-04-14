@@ -72,6 +72,46 @@ if(NOT WIN32)
 	add_definitions(-DGLX_GLXEXT_PROTOTYPES)
 endif()
 
+
+#### ~~~~~ QT STUFF ~~~~~
+# Instruct CMake to run moc automatically when needed.
+set(CMAKE_AUTOMOC ON)
+
+# This isn't platform independent. But, it is the default install directory.
+# CHANGE THIS IF YOU USED DIFFERENT LOCATION OR COMPILER
+if (WIN32)
+    set (QTDIR "C:/Qt/5.8/msvc2015_64")
+else()
+    set (QTDIR "$ENV{HOME}/Qt/5.8/gcc_64")
+endif()
+
+# Early detect if QT doesn't exist for meaningful error message.
+if (NOT EXISTS ${QTDIR})
+    message ( "Qt should be located at ${QTDIR}")
+    message ( FATAL_ERROR "Qt is not probably configured.  Please download Qt ( https://www.qt.io/download-open-source/ ) and/or edit this file to the proper directory.")
+endif()
+
+# Qt should set this to be true but I have no idea why it doesn't. For now, just force it to be defined because it should be.
+add_definitions(-DQT_UI)
+
+# Inform CMAKE where Qt is.
+set (CMAKE_PREFIX_PATH "${QTDIR}")
+
+# Windows needs to have the dlls path in environment for visual studio.
+# So, do so here. Should this be WIN32 or MSVC?
+if (MSVC)
+   set(CMAKE_MSVCIDE_RUN_PATH "${QTDIR}/bin/") 
+endif ()
+
+# Find the QtWidgets library. This also includes QtWidget dependencies.
+find_package(Qt5Widgets)
+message("Succesfully past the QT initializing section! HOORAY!!!!")
+
+#### ~~~~~ QT STUFF DONE ~~~~~
+
+
+
+
 find_package(wxWidgets COMPONENTS core base net aui gl xml REQUIRED)
 if(NOT MSVC)
 	if(APPLE)
@@ -207,6 +247,8 @@ endif()
 
 add_executable(rpcs3 ${RPCS3_SRC} ${RES_FILES})
 
+# Use the Widgets module from Qt 5 for linking
+target_link_libraries(rpcs3 Qt5::Widgets)
 
 if(MSVC)
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:libc.lib /NODEFAULTLIB:libcmt.lib /NODEFAULTLIB:libcd.lib /NODEFAULTLIB:libcmtd.lib /NODEFAULTLIB:msvcrtd.lib")
