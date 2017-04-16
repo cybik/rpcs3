@@ -7,11 +7,8 @@ include(cotire)
 project(rpcs3)
 
 # Generate git-version.h at build time.
-add_custom_target(GitVersion ALL
-	DEPENDS something_that_never_exists)
-add_custom_command(OUTPUT something_that_never_exists
-	COMMAND ${CMAKE_COMMAND} -DSOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}
-		-P ${CMAKE_CURRENT_SOURCE_DIR}/git-version.cmake)
+include(GetGitData)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/git-version.h.in ${CMAKE_CURRENT_LIST_DIR}/git-version.h)
 
 # Check for a sufficient compiler and set build options
 include(ConfigureCompiler)
