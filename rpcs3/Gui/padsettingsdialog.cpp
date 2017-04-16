@@ -535,80 +535,8 @@ void PadSettingsDialog::LoadSettings()
 
 const QString PadSettingsDialog::GetKeyName(const u32 keyCode)
 {
-	QString keyName;
-
-	switch (keyCode)
-	{
-	case Qt::Key_unknown: LOG_ERROR(HLE, "Invalid key code"); keyName = "ERROR!"; break;
-	case Qt::Key_Backspace: keyName = "BackSpace"; break;
-	case Qt::Key_Tab: keyName = "Tab"; break;
-	case Qt::Key_Return: keyName = "Enter"; break;
-	case Qt::Key_Escape: keyName = "Esc"; break;
-	case Qt::Key_Space: keyName = "Space"; break;
-	case Qt::Key_Delete: keyName = "Delete"; break;
-	case Qt::Key_Shift: keyName = "Shift"; break;
-	case Qt::Key_Alt: keyName = "ALT"; break;
-	case Qt::Key_Control: keyName = "CTRL"; break;
-	case Qt::Key_Pause: keyName = "Pause"; break;
-	case Qt::Key_CapsLock: keyName = "CapsLock"; break;
-	case Qt::Key_End: keyName = "End"; break;
-	case Qt::Key_Home: keyName = "Home"; break;
-	case Qt::Key_Left: keyName = "Left"; break;
-	case Qt::Key_Up: keyName = "Up"; break;
-	case Qt::Key_Right: keyName = "Right"; break;
-	case Qt::Key_Down: keyName = "Down"; break;
-	case Qt::Key_Select: keyName = "Select"; break;
-	case Qt::Key_Print: keyName = "Print"; break;
-	//TODO
-	//case Qt::Key_: keyName = "Snapshot"; break;
-	case Qt::Key_Insert: keyName = "Insert"; break;
-	//TODO
-	//case Qt::Key_Num_5: keyName = "Num0"; break;
-	//case Qt::Key_: keyName = "Num1"; break;
-	//case Qt::Key_: keyName = "Num2"; break;
-	//case Qt::Key_: keyName = "Num3"; break;
-	//case Qt::Key_: keyName = "Num4"; break;
-	//case Qt::Key_: keyName = "Num5"; break;
-	//case Qt::Key_: keyName = "Num6"; break;
-	//case Qt::Key_: keyName = "Num7"; break;
-	//case Qt::Key_: keyName = "Num8"; break;
-	//case Qt::Key_: keyName = "Num9"; break;
-	case Qt::Key_F1: keyName = "F1"; break;
-	case Qt::Key_F2: keyName = "F2"; break;
-	case Qt::Key_F3: keyName = "F3"; break;
-	case Qt::Key_F4: keyName = "F4"; break;
-	case Qt::Key_F5: keyName = "F5"; break;
-	case Qt::Key_F6: keyName = "F6"; break;
-	case Qt::Key_F7: keyName = "F7"; break;
-	case Qt::Key_F8: keyName = "F8"; break;
-	case Qt::Key_F9: keyName = "F9"; break;
-	case Qt::Key_F10: keyName = "F10"; break;
-	case Qt::Key_F11: keyName = "F11"; break;
-	case Qt::Key_F12: keyName = "F12"; break;
-	case Qt::Key_NumLock: keyName = "NumLock"; break;
-	case Qt::Key_ScrollLock: keyName = "ScrollLock"; break;
-	case Qt::Key_PageUp: keyName = "PgUp"; break;
-	case Qt::Key_PageDown: keyName = "PgDn"; break;
-	//TODO
-	//case Qt::Key_MPAD_SPACE: keyName = "NumSpace"; break
-	//case Qt::Key_MPAD_TAB: keyName = "NumTab"; break;
-	//case Qt::Key_MPAD_ENTER: keyName = "NumEnter"; break;
-	//case Qt::Key_MPAD_HOME: keyName = "NumHome"; break;
-	//case Qt::Key_MPAD_LEFT: keyName = "NumLeft"; break;
-	//case Qt::Key_MPAD_UP: keyName = "NumUp"; break;
-	//case Qt::Key_MPAD_RIGHT: keyName = "NumRight"; break;
-	//case Qt::Key_MPAD_DOWN: keyName = "NumDown"; break;
-	//case Qt::Key_MPAD_PAGEUP: keyName = "NumPgUp"; break;
-	//case Qt::Key_MPAD_PAGEDOWN: keyName = "NumPgDn"; break;
-	//case Qt::Key_MPAD_END: keyName = "NumEnd"; break;
-	//case Qt::Key_MPAD_BEGIN: keyName = "NumHome"; break;
-	//case Qt::Key_MPAD_INSERT: keyName = "NumIns"; break;
-	//case Qt::Key_MPAD_DELETE: keyName = "NumDel"; break;
-
-	default: keyName = static_cast<char>(keyCode); break;
-	}
-
-	return keyName;
+	//TODO what about numpad?
+	return QKeySequence(keyCode).toString();
 }
 
 void PadSettingsDialog::OnPadButtonClicked(int id)
