@@ -215,6 +215,39 @@ void MainWindow::About()
 	about.exec();
 }
 
+void MainWindow::ShowDebugFrame()
+{
+	debuggerFrame->show();
+	showDebuggerAct->setEnabled(false);
+}
+
+void MainWindow::ShowLogFrame()
+{
+	logFrame->show();
+	showLogAct->setEnabled(false);
+}
+
+void MainWindow::ShowGameListFrame()
+{
+	gameListFrame->show();
+	showGameListAct->setEnabled(false);
+}
+
+void MainWindow::OnDebugFrameClosed()
+{
+	showDebuggerAct->setEnabled(true);
+}
+
+void MainWindow::OnLogFrameClosed()
+{
+	showLogAct->setEnabled(true);
+}
+
+void MainWindow::OnGameListFrameClosed()
+{
+	showGameListAct->setEnabled(true);
+}
+
 void MainWindow::CreateActions()
 {
 	bootElfAct = new QAction(tr("Boot (S)ELF file"), this);
@@ -296,6 +329,16 @@ void MainWindow::CreateActions()
 	toolsSecryptSprxLibsAct = new QAction(tr("&Decrypt SPRX libraries"), this);
 	connect(toolsSecryptSprxLibsAct, &QAction::triggered, this, &MainWindow::DecryptSPRXLibraries);
 
+	showDebuggerAct = new QAction(tr("Show Debugger"), this);
+	connect(showDebuggerAct, &QAction::triggered, this, &MainWindow::ShowDebugFrame);
+
+	showLogAct = new QAction(tr("Show Log/TTY"), this);
+	connect(showLogAct, &QAction::triggered, this, &MainWindow::ShowLogFrame);
+
+	showGameListAct = new QAction(tr("Show GameList"), this);
+	showGameListAct->setEnabled(false);
+	connect(showGameListAct, &QAction::triggered, this, &MainWindow::ShowGameListFrame);
+
 	aboutAct = new QAction(tr("&About"), this);
 	aboutAct->setStatusTip(tr("Show the application's About box"));
 	connect(aboutAct, &QAction::triggered, this, &MainWindow::About);
@@ -314,6 +357,12 @@ void MainWindow::CreateMenus()
 	bootMenu->addAction(bootInstallAct);
 	bootMenu->addSeparator();
 	bootMenu->addAction(exitAct);
+
+	QMenu *viewMenu = menuBar()->addMenu(tr("&View"));
+	viewMenu->addAction(showDebuggerAct);
+	viewMenu->addAction(showLogAct);
+	viewMenu->addSeparator();
+	viewMenu->addAction(showGameListAct);
 
 	QMenu *sysMenu = menuBar()->addMenu(tr("&System"));
 	sysMenu->addAction(sysPauseAct);
@@ -349,13 +398,20 @@ void MainWindow::CreateMenus()
 
 void MainWindow::CreateDockWindows()
 {
-	GameListFrame *gameList = new GameListFrame(this);
-	DebuggerFrame *debugger = new DebuggerFrame(this);
-	LogFrame *log = new LogFrame(this);
+	gameListFrame = new GameListFrame(this);
+	debuggerFrame = new DebuggerFrame(this);
+	logFrame = new LogFrame(this);
 
-	addDockWidget(Qt::LeftDockWidgetArea, gameList);
-	addDockWidget(Qt::LeftDockWidgetArea, log);
-	addDockWidget(Qt::RightDockWidgetArea, debugger);
+	addDockWidget(Qt::LeftDockWidgetArea, gameListFrame);
+	addDockWidget(Qt::LeftDockWidgetArea, logFrame);
+	addDockWidget(Qt::RightDockWidgetArea, debuggerFrame);
+
+	debuggerFrame->hide();
+	logFrame->hide();
+
+	connect(logFrame, &LogFrame::LogFrameClosed, this, &MainWindow::OnLogFrameClosed);
+	connect(debuggerFrame, &DebuggerFrame::DebugFrameClosed, this, &MainWindow::OnDebugFrameClosed);
+	connect(gameListFrame, &GameListFrame::GameListFrameClosed, this, &MainWindow::OnGameListFrameClosed);
 }
 
 #endif // QT_UI
