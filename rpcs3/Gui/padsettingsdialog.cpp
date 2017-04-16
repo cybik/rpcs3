@@ -7,15 +7,16 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QAction>
+#include <QButtonGroup>
 
 #include "stdafx.h"
-//TODO #include "rpcs3.h"
-//#include "KeyboardPadHandler.h"
 #include "padsettingsdialog.h"
 
-#define PADBUTTONWIDTH 100
+// TODO: rewrite with std::chrono or wxTimer
+#include <time.h>
 
-//TODO Set up the buttons
+#define PADBUTTONWIDTH 50
+
 PadSettingsDialog::PadSettingsDialog(QWidget *parent) : QDialog(parent)
 {
     // Left Analog Stick
@@ -24,22 +25,22 @@ PadSettingsDialog::PadSettingsDialog(QWidget *parent) : QDialog(parent)
 		QHBoxLayout *roundStickLHBox1 = new QHBoxLayout;
 		QHBoxLayout *roundStickLHBox2 = new QHBoxLayout;
 		QHBoxLayout *roundStickLHBox3 = new QHBoxLayout;
-		QPushButton *roundStickLUp = new QPushButton(tr("W"));
-		QPushButton *roundStickLLeft = new QPushButton(tr("A"));
-		QPushButton *roundStickLRight = new QPushButton(tr("D"));
-		QPushButton *roundStickLDown = new QPushButton(tr("S"));
-		roundStickLHBox1->addWidget(roundStickLUp);
-		roundStickLHBox2->addWidget(roundStickLLeft);
-		roundStickLHBox2->addWidget(roundStickLRight);
-		roundStickLHBox3->addWidget(roundStickLDown);
+		b_up_lstick = new QPushButton(tr("W"));
+		b_left_lstick = new QPushButton(tr("A"));
+		b_right_lstick = new QPushButton(tr("D"));
+		b_down_lstick = new QPushButton(tr("S"));
+		roundStickLHBox1->addWidget(b_up_lstick);
+		roundStickLHBox2->addWidget(b_left_lstick);
+		roundStickLHBox2->addWidget(b_right_lstick);
+		roundStickLHBox3->addWidget(b_down_lstick);
 		roundStickLVBox->addLayout(roundStickLHBox1);
 		roundStickLVBox->addLayout(roundStickLHBox2);
 		roundStickLVBox->addLayout(roundStickLHBox3);
 		roundStickL->setLayout(roundStickLVBox);
-		roundStickLUp->setMaximumWidth(PADBUTTONWIDTH);
-		roundStickLLeft->setMaximumWidth(PADBUTTONWIDTH);
-		roundStickLRight->setMaximumWidth(PADBUTTONWIDTH);
-		roundStickLDown->setMaximumWidth(PADBUTTONWIDTH);
+		b_up_lstick->setFixedWidth(PADBUTTONWIDTH);
+		b_left_lstick->setFixedWidth(PADBUTTONWIDTH);
+		b_right_lstick->setFixedWidth(PADBUTTONWIDTH);
+		b_down_lstick->setFixedWidth(PADBUTTONWIDTH);
 
     // D-Pad
     QGroupBox *roundPadControls = new QGroupBox(tr("D-Pad"));
@@ -47,22 +48,22 @@ PadSettingsDialog::PadSettingsDialog(QWidget *parent) : QDialog(parent)
 		QHBoxLayout *roundPadControlsHBox1 = new QHBoxLayout;
 		QHBoxLayout *roundPadControlsHBox2 = new QHBoxLayout;
 		QHBoxLayout *roundPadControlsHBox3 = new QHBoxLayout;
-		QPushButton *roundPadControlsUp = new QPushButton(tr("Up"));
-		QPushButton *roundPadControlsLeft = new QPushButton(tr("Left"));
-		QPushButton *roundPadControlsRight = new QPushButton(tr("Right"));
-		QPushButton *roundPadControlsDown = new QPushButton(tr("Down"));
-		roundPadControlsHBox1->addWidget(roundPadControlsUp);
-		roundPadControlsHBox2->addWidget(roundPadControlsLeft);
-		roundPadControlsHBox2->addWidget(roundPadControlsRight);
-		roundPadControlsHBox3->addWidget(roundPadControlsDown);
+		b_up = new QPushButton(tr("Up"));
+		b_left = new QPushButton(tr("Left"));
+		b_right = new QPushButton(tr("Right"));
+		b_down = new QPushButton(tr("Down"));
+		roundPadControlsHBox1->addWidget(b_up);
+		roundPadControlsHBox2->addWidget(b_left);
+		roundPadControlsHBox2->addWidget(b_right);
+		roundPadControlsHBox3->addWidget(b_down);
 		roundPadControlsVBox->addLayout(roundPadControlsHBox1);
 		roundPadControlsVBox->addLayout(roundPadControlsHBox2);
 		roundPadControlsVBox->addLayout(roundPadControlsHBox3);
 		roundPadControls->setLayout(roundPadControlsVBox);
-		roundPadControlsUp->setMaximumWidth(PADBUTTONWIDTH);
-		roundPadControlsLeft->setMaximumWidth(PADBUTTONWIDTH);
-		roundPadControlsRight->setMaximumWidth(PADBUTTONWIDTH);
-		roundPadControlsDown->setMaximumWidth(PADBUTTONWIDTH);
+		b_up->setFixedWidth(PADBUTTONWIDTH);
+		b_left->setFixedWidth(PADBUTTONWIDTH);
+		b_right->setFixedWidth(PADBUTTONWIDTH);
+		b_down->setFixedWidth(PADBUTTONWIDTH);
 
 		// Left Shifts
 		QGroupBox *roundPadShiftsL = new QGroupBox(tr("Left Shifts"));
@@ -73,12 +74,12 @@ PadSettingsDialog::PadSettingsDialog(QWidget *parent) : QDialog(parent)
 		QVBoxLayout *roundPadL1Vbox = new QVBoxLayout;
 		QVBoxLayout *roundPadL2Vbox = new QVBoxLayout;
 		QVBoxLayout *roundPadL3Vbox = new QVBoxLayout;
-		QPushButton *roundPadL1Button = new QPushButton(tr("Q"));
-		QPushButton *roundPadL2Button = new QPushButton(tr("R"));
-		QPushButton *roundPadL3Button = new QPushButton(tr("F"));
-		roundPadL1Vbox->addWidget(roundPadL1Button);
-		roundPadL2Vbox->addWidget(roundPadL2Button);
-		roundPadL3Vbox->addWidget(roundPadL3Button);
+		b_shift_l1 = new QPushButton(tr("Q"));
+		b_shift_l2 = new QPushButton(tr("R"));
+		b_shift_l3 = new QPushButton(tr("F"));
+		roundPadL1Vbox->addWidget(b_shift_l1);
+		roundPadL2Vbox->addWidget(b_shift_l2);
+		roundPadL3Vbox->addWidget(b_shift_l3);
 		roundPadL1->setLayout(roundPadL1Vbox);
 		roundPadL2->setLayout(roundPadL2Vbox);
 		roundPadL3->setLayout(roundPadL3Vbox);
@@ -86,9 +87,9 @@ PadSettingsDialog::PadSettingsDialog(QWidget *parent) : QDialog(parent)
 		roundPadShiftsLVbox->addWidget(roundPadL2);
 		roundPadShiftsLVbox->addWidget(roundPadL3);
 		roundPadShiftsL->setLayout(roundPadShiftsLVbox);
-		roundPadL1Button->setMaximumWidth(PADBUTTONWIDTH);
-		roundPadL2Button->setMaximumWidth(PADBUTTONWIDTH);
-		roundPadL3Button->setMaximumWidth(PADBUTTONWIDTH);
+		b_shift_l1->setFixedWidth(PADBUTTONWIDTH);
+		b_shift_l2->setFixedWidth(PADBUTTONWIDTH);
+		b_shift_l3->setFixedWidth(PADBUTTONWIDTH);
 
     // Start / Select
     QGroupBox *roundPadSystem = new QGroupBox(tr("System"));
@@ -97,17 +98,17 @@ PadSettingsDialog::PadSettingsDialog(QWidget *parent) : QDialog(parent)
 		QVBoxLayout *roundPadSystemVbox = new QVBoxLayout;
 		QVBoxLayout *roundPadSelectVbox = new QVBoxLayout;
 		QVBoxLayout *roundPadStartVbox = new QVBoxLayout;
-		QPushButton *roundPadSelectButton = new QPushButton(tr("Space"));
-		QPushButton *roundPadStartButton = new QPushButton(tr("Enter"));
-		roundPadSelectVbox->addWidget(roundPadSelectButton);
-		roundPadStartVbox->addWidget(roundPadStartButton);
+		b_select = new QPushButton(tr("Space"));
+		b_start = new QPushButton(tr("Enter"));
+		roundPadSelectVbox->addWidget(b_select);
+		roundPadStartVbox->addWidget(b_start);
 		roundPadSelect->setLayout(roundPadSelectVbox);
 		roundPadStart->setLayout(roundPadStartVbox);
 		roundPadSystemVbox->addWidget(roundPadSelect);
 		roundPadSystemVbox->addWidget(roundPadStart);
 		roundPadSystem->setLayout(roundPadSystemVbox);
-		roundPadSelectButton->setMaximumWidth(PADBUTTONWIDTH);
-		roundPadStartButton->setMaximumWidth(PADBUTTONWIDTH);
+		b_select->setFixedWidth(PADBUTTONWIDTH);
+		b_start->setFixedWidth(PADBUTTONWIDTH);
 
     // Right Shifts
     QGroupBox *roundPadShiftsR = new QGroupBox(tr("Right Shifts"));
@@ -118,12 +119,12 @@ PadSettingsDialog::PadSettingsDialog(QWidget *parent) : QDialog(parent)
 		QVBoxLayout *roundPadR1Vbox = new QVBoxLayout;
 		QVBoxLayout *roundPadR2Vbox = new QVBoxLayout;
 		QVBoxLayout *roundPadR3Vbox = new QVBoxLayout;
-		QPushButton *roundPadR1Button = new QPushButton(tr("E"));
-		QPushButton *roundPadR2Button = new QPushButton(tr("T"));
-		QPushButton *roundPadR3Button = new QPushButton(tr("G"));
-		roundPadR1Vbox->addWidget(roundPadR1Button);
-		roundPadR2Vbox->addWidget(roundPadR2Button);
-		roundPadR3Vbox->addWidget(roundPadR3Button);
+		b_shift_r1 = new QPushButton(tr("E"));
+		b_shift_r2 = new QPushButton(tr("T"));
+		b_shift_r3 = new QPushButton(tr("G"));
+		roundPadR1Vbox->addWidget(b_shift_r1);
+		roundPadR2Vbox->addWidget(b_shift_r2);
+		roundPadR3Vbox->addWidget(b_shift_r3);
 		roundPadR1->setLayout(roundPadR1Vbox);
 		roundPadR2->setLayout(roundPadR2Vbox);
 		roundPadR3->setLayout(roundPadR3Vbox);
@@ -131,9 +132,9 @@ PadSettingsDialog::PadSettingsDialog(QWidget *parent) : QDialog(parent)
     roundPadShiftsRVbox->addWidget(roundPadR2);
     roundPadShiftsRVbox->addWidget(roundPadR3);
     roundPadShiftsR->setLayout(roundPadShiftsRVbox);
-		roundPadR1Button->setMaximumWidth(PADBUTTONWIDTH);
-		roundPadR2Button->setMaximumWidth(PADBUTTONWIDTH);
-		roundPadR3Button->setMaximumWidth(PADBUTTONWIDTH);
+		b_shift_r1->setFixedWidth(PADBUTTONWIDTH);
+		b_shift_r2->setFixedWidth(PADBUTTONWIDTH);
+		b_shift_r3->setFixedWidth(PADBUTTONWIDTH);
 
     // Action buttons
 		QGroupBox *roundPadButtons = new QGroupBox(tr("Buttons"));
@@ -149,14 +150,14 @@ PadSettingsDialog::PadSettingsDialog(QWidget *parent) : QDialog(parent)
 		QHBoxLayout *roundPadButtonsVBox22 = new QHBoxLayout;
 		QHBoxLayout *roundPadButtonsVBox23 = new QHBoxLayout;
 		QHBoxLayout *roundPadButtonsVBox24 = new QHBoxLayout;
-		QPushButton *roundPadButtonsUp = new QPushButton(tr("V"));
-		QPushButton *roundPadButtonsLeft = new QPushButton(tr("Z"));
-		QPushButton *roundPadButtonsRight = new QPushButton(tr("C"));
-		QPushButton *roundPadButtonsDown = new QPushButton(tr("X"));
-		roundPadButtonsVBox21->addWidget(roundPadButtonsUp);
-		roundPadButtonsVBox22->addWidget(roundPadButtonsLeft);
-		roundPadButtonsVBox23->addWidget(roundPadButtonsRight);
-		roundPadButtonsVBox24->addWidget(roundPadButtonsDown);
+		b_triangle = new QPushButton(tr("V"));
+		b_square = new QPushButton(tr("Z"));
+		b_circle = new QPushButton(tr("C"));
+		b_cross = new QPushButton(tr("X"));
+		roundPadButtonsVBox21->addWidget(b_triangle);
+		roundPadButtonsVBox22->addWidget(b_square);
+		roundPadButtonsVBox23->addWidget(b_circle);
+		roundPadButtonsVBox24->addWidget(b_cross);
 		roundPadTriangle->setLayout(roundPadButtonsVBox21);
 		roundPadSquare->setLayout(roundPadButtonsVBox22);
 		roundPadCircle->setLayout(roundPadButtonsVBox23);
@@ -169,10 +170,10 @@ PadSettingsDialog::PadSettingsDialog(QWidget *parent) : QDialog(parent)
 		roundPadButtonsVBox->addLayout(roundPadButtonsHBox2);
 		roundPadButtonsVBox->addLayout(roundPadButtonsHBox3);
 		roundPadButtons->setLayout(roundPadButtonsVBox);
-		roundPadButtonsUp->setMaximumWidth(PADBUTTONWIDTH);
-		roundPadButtonsLeft->setMaximumWidth(PADBUTTONWIDTH);
-		roundPadButtonsRight->setMaximumWidth(PADBUTTONWIDTH);
-		roundPadButtonsDown->setMaximumWidth(PADBUTTONWIDTH);
+		b_triangle->setFixedWidth(PADBUTTONWIDTH);
+		b_square->setFixedWidth(PADBUTTONWIDTH);
+		b_circle->setFixedWidth(PADBUTTONWIDTH);
+		b_cross->setFixedWidth(PADBUTTONWIDTH);
 
     // Right Analog Stick
     QGroupBox *roundStickR = new QGroupBox(tr("Right Analog Stick"));
@@ -180,32 +181,70 @@ PadSettingsDialog::PadSettingsDialog(QWidget *parent) : QDialog(parent)
 		QHBoxLayout *roundStickRHBox1 = new QHBoxLayout;
 		QHBoxLayout *roundStickRHBox2 = new QHBoxLayout;
 		QHBoxLayout *roundStickRHBox3 = new QHBoxLayout;
-		QPushButton *roundStickRUp = new QPushButton(tr("PgUp"));
-		QPushButton *roundStickRLeft = new QPushButton(tr("Home"));
-		QPushButton *roundStickRRight = new QPushButton(tr("End"));
-		QPushButton *roundStickRDown = new QPushButton(tr("PgDown"));		
-		roundStickRHBox1->addWidget(roundStickRUp);
-		roundStickRHBox2->addWidget(roundStickRLeft);
-		roundStickRHBox2->addWidget(roundStickRRight);
-		roundStickRHBox3->addWidget(roundStickRDown);
+		b_up_rstick = new QPushButton(tr("PgUp"));
+		b_left_rstick = new QPushButton(tr("Home"));
+		b_right_rstick = new QPushButton(tr("End"));
+		b_down_rstick = new QPushButton(tr("PgDown"));
+		roundStickRHBox1->addWidget(b_up_rstick);
+		roundStickRHBox2->addWidget(b_left_rstick);
+		roundStickRHBox2->addWidget(b_right_rstick);
+		roundStickRHBox3->addWidget(b_down_rstick);
 		roundStickRVBox->addLayout(roundStickRHBox1);
 		roundStickRVBox->addLayout(roundStickRHBox2);
 		roundStickRVBox->addLayout(roundStickRHBox3);
 		roundStickR->setLayout(roundStickRVBox);
-		roundStickRUp->setMaximumWidth(PADBUTTONWIDTH);
-		roundStickRLeft->setMaximumWidth(PADBUTTONWIDTH);
-		roundStickRRight->setMaximumWidth(PADBUTTONWIDTH);
-		roundStickRDown->setMaximumWidth(PADBUTTONWIDTH);
+		b_up_rstick->setFixedWidth(PADBUTTONWIDTH);
+		b_left_rstick->setFixedWidth(PADBUTTONWIDTH);
+		b_right_rstick->setFixedWidth(PADBUTTONWIDTH);
+		b_down_rstick->setFixedWidth(PADBUTTONWIDTH);
 
     // Buttons
-    QPushButton *defaultButton = new QPushButton(tr("By default"));
+    b_reset = new QPushButton(tr("By default"));
 
-    QPushButton *okButton = new QPushButton(tr("OK"));
-    connect(okButton, &QAbstractButton::clicked, this, &QDialog::accept);
+    b_ok = new QPushButton(tr("OK"));
 
-    QPushButton *cancelButton = new QPushButton(tr("Cancel"));
-    cancelButton->setDefault(true);
-    connect(cancelButton, &QAbstractButton::clicked, this, &QWidget::close);
+    b_cancel = new QPushButton(tr("Cancel"));
+		b_cancel->setDefault(true);
+    connect(b_cancel, &QAbstractButton::clicked, this, &QWidget::close);
+
+		// Handling
+		QButtonGroup *padButtons = new QButtonGroup(this);
+		padButtons->addButton(b_left_lstick, 1);
+		padButtons->addButton(b_down_lstick, 2);
+		padButtons->addButton(b_right_lstick, 3);
+		padButtons->addButton(b_up_lstick, 4);
+
+		padButtons->addButton(b_left, 5);
+		padButtons->addButton(b_down, 6);
+		padButtons->addButton(b_right, 7);
+		padButtons->addButton(b_up, 8);
+
+		padButtons->addButton(b_shift_l1, 9);
+		padButtons->addButton(b_shift_l2, 10);
+		padButtons->addButton(b_shift_l3, 11);
+
+		padButtons->addButton(b_start, 12);
+		padButtons->addButton(b_select, 13);
+
+		padButtons->addButton(b_shift_r1, 14);
+		padButtons->addButton(b_shift_r2, 15);
+		padButtons->addButton(b_shift_r3, 16);
+
+		padButtons->addButton(b_square, 17);
+		padButtons->addButton(b_cross, 18);
+		padButtons->addButton(b_circle, 19);
+		padButtons->addButton(b_triangle, 20);
+
+		padButtons->addButton(b_left_rstick, 21);
+		padButtons->addButton(b_down_rstick, 22);
+		padButtons->addButton(b_right_rstick, 23);
+		padButtons->addButton(b_up_rstick, 24);
+
+		padButtons->addButton(b_reset, 25);
+		padButtons->addButton(b_ok, 26);
+		padButtons->addButton(b_cancel, 27);
+
+		connect(padButtons, SIGNAL(buttonClicked(int)), this, SLOT(OnPadButtonClicked(int)));
 
     // Main layout
     QHBoxLayout *hbox1 = new QHBoxLayout;
@@ -218,10 +257,10 @@ PadSettingsDialog::PadSettingsDialog(QWidget *parent) : QDialog(parent)
     hbox1->addWidget(roundStickR);
 
     QHBoxLayout *hbox2 = new QHBoxLayout;
-    hbox2->addWidget(defaultButton);
+    hbox2->addWidget(b_reset);
     hbox2->addStretch();
-    hbox2->addWidget(okButton);
-    hbox2->addWidget(cancelButton);
+    hbox2->addWidget(b_ok);
+    hbox2->addWidget(b_cancel);
 
     QVBoxLayout *vbox = new QVBoxLayout;
     vbox->addLayout(hbox1);
@@ -231,232 +270,120 @@ PadSettingsDialog::PadSettingsDialog(QWidget *parent) : QDialog(parent)
     setWindowTitle(tr("PAD Settings"));
 }
 
-void PadSettingsDialog::OnKeyDown(QKeyEvent *keyEvent)
+void PadSettingsDialog::keyPressEvent(QKeyEvent *keyEvent)
 {
 	m_key_pressed = true;
 
 	switch (m_button_id)
 	{
-//TODO should work with g_kbpad_config linked
-	//case id_pad_lstick_left: g_kbpad_config.left_stick_left = keyEvent->key(); break;
-	//case id_pad_lstick_down: g_kbpad_config.left_stick_down = keyEvent->key(); break;
-	//case id_pad_lstick_right: g_kbpad_config.left_stick_right = keyEvent->key(); break;
-	//case id_pad_lstick_up: g_kbpad_config.left_stick_up = keyEvent->key(); break;
-	//
-	//case id_pad_left: g_kbpad_config.left = keyEvent->key(); break;
-	//case id_pad_down: g_kbpad_config.down = keyEvent->key(); break;
-	//case id_pad_right: g_kbpad_config.right = keyEvent->key(); break;
-	//case id_pad_up: g_kbpad_config.up = keyEvent->key(); break;
-	//
-	//case id_pad_l1: g_kbpad_config.l1 = keyEvent->key(); break;
-	//case id_pad_l2: g_kbpad_config.l2 = keyEvent->key(); break;
-	//case id_pad_l3: g_kbpad_config.l3 = keyEvent->key(); break;
-	//
-	//case id_pad_start: g_kbpad_config.start = keyEvent->key(); break;
-	//case id_pad_select: g_kbpad_config.select = keyEvent->key(); break;
-	//
-	//case id_pad_r1: g_kbpad_config.r1 = keyEvent->key(); break;
-	//case id_pad_r2: g_kbpad_config.r2 = keyEvent->key(); break;
-	//case id_pad_r3: g_kbpad_config.r3 = keyEvent->key(); break;
-	//
-	//case id_pad_square: g_kbpad_config.square = keyEvent->key(); break;
-	//case id_pad_cross: g_kbpad_config.cross = keyEvent->key(); break;
-	//case id_pad_circle: g_kbpad_config.circle = keyEvent->key(); break;
-	//case id_pad_triangle: g_kbpad_config.triangle = keyEvent->key(); break;
-	//
-	//case id_pad_rstick_left: g_kbpad_config.right_stick_left = keyEvent->key(); break;
-	//case id_pad_rstick_down: g_kbpad_config.right_stick_down = keyEvent->key(); break;
-	//case id_pad_rstick_right: g_kbpad_config.right_stick_right = keyEvent->key(); break;
-	//case id_pad_rstick_up: g_kbpad_config.right_stick_up = keyEvent->key(); break;
+	case id_pad_lstick_left: g_kbpad_config.left_stick_left = keyEvent->key(); break;
+	case id_pad_lstick_down: g_kbpad_config.left_stick_down = keyEvent->key(); break;
+	case id_pad_lstick_right: g_kbpad_config.left_stick_right = keyEvent->key(); break;
+	case id_pad_lstick_up: g_kbpad_config.left_stick_up = keyEvent->key(); break;
+	
+	case id_pad_left: g_kbpad_config.left = keyEvent->key(); break;
+	case id_pad_down: g_kbpad_config.down = keyEvent->key(); break;
+	case id_pad_right: g_kbpad_config.right = keyEvent->key(); break;
+	case id_pad_up: g_kbpad_config.up = keyEvent->key(); break;
+	
+	case id_pad_l1: g_kbpad_config.l1 = keyEvent->key(); break;
+	case id_pad_l2: g_kbpad_config.l2 = keyEvent->key(); break;
+	case id_pad_l3: g_kbpad_config.l3 = keyEvent->key(); break;
+	
+	case id_pad_start: g_kbpad_config.start = keyEvent->key(); break;
+	case id_pad_select: g_kbpad_config.select = keyEvent->key(); break;
+	
+	case id_pad_r1: g_kbpad_config.r1 = keyEvent->key(); break;
+	case id_pad_r2: g_kbpad_config.r2 = keyEvent->key(); break;
+	case id_pad_r3: g_kbpad_config.r3 = keyEvent->key(); break;
+	
+	case id_pad_square: g_kbpad_config.square = keyEvent->key(); break;
+	case id_pad_cross: g_kbpad_config.cross = keyEvent->key(); break;
+	case id_pad_circle: g_kbpad_config.circle = keyEvent->key(); break;
+	case id_pad_triangle: g_kbpad_config.triangle = keyEvent->key(); break;
+	
+	case id_pad_rstick_left: g_kbpad_config.right_stick_left = keyEvent->key(); break;
+	case id_pad_rstick_down: g_kbpad_config.right_stick_down = keyEvent->key(); break;
+	case id_pad_rstick_right: g_kbpad_config.right_stick_right = keyEvent->key(); break;
+	case id_pad_rstick_up: g_kbpad_config.right_stick_up = keyEvent->key(); break;
 
 	case 0: break;
 	default: LOG_ERROR(HLE, "Unknown button ID: %d", m_button_id); break;
 	}
 
-	UpdateLabel();
-//TODO?	//keyEvent.Skip(); //?
-}
-
-void PadSettingsDialog::OnKeyUp(QKeyEvent *keyEvent)
-{
 	SwitchButtons(true);  // enable all buttons
 	m_button_id = 0; // reset current button id
 	m_key_pressed = false;
-//TODO?	//keyEvent.Skip(); //?
-}
-
-//TODO
-void PadSettingsDialog::OnButtonClicked()
-{
-	//if (sender() != id_reset_parameters)
-	//{
-	//	m_button_id = sender();
-	//	SwitchButtons(false); // disable all buttons, needed for using Space, Enter and other specific buttons
-	//												//RunTimer(3, event.GetId()); // TODO: Currently, timer disabled. Use by later, have some strange problems
-	//												//SwitchButtons(true); // needed, if timer enabled
-	//	UpdateLabel();
-	//}
-	//
-	//else
-	//{
-	//	switch (sender())
-	//	{
-	//	case id_reset_parameters: ResetParameters(); UpdateLabel(); break;
-	//	case id_ok: g_kbpad_config.save(); break;
-	//	case id_cancel: break;
-	//
-	//	default: LOG_ERROR(HLE, "Unknown button ID: %d", sender()); break;
-	//	}
-	//}
-}
-
-const QString PadSettingsDialog::GetKeyName(const u32 keyCode)
-{
-	QString keyName;
-
-	switch (keyCode)
-	{
-	case Qt::Key_unknown: LOG_ERROR(HLE, "Invalid key code"); keyName = "ERROR!"; break;
-	case Qt::Key_Backspace: keyName = "BackSpace"; break;
-	case Qt::Key_Tab: keyName = "Tab"; break;
-	case Qt::Key_Enter: keyName = "Enter"; break;
-	case Qt::Key_Escape: keyName = "Esc"; break;
-	case Qt::Key_Space: keyName = "Space"; break;
-	case Qt::Key_Delete: keyName = "Delete"; break;
-	case Qt::Key_Shift: keyName = "Shift"; break;
-	case Qt::Key_Alt: keyName = "ALT"; break;
-	case Qt::Key_Control: keyName = "CTRL"; break;
-	case Qt::Key_Pause: keyName = "Pause"; break;
-	case Qt::Key_CapsLock: keyName = "CapsLock"; break;
-	case Qt::Key_End: keyName = "End"; break;
-	case Qt::Key_Home: keyName = "Home"; break;
-	case Qt::Key_Left: keyName = "Left"; break;
-	case Qt::Key_Up: keyName = "Up"; break;
-	case Qt::Key_Right: keyName = "Right"; break;
-	case Qt::Key_Down: keyName = "Down"; break;
-	case Qt::Key_Select: keyName = "Select"; break;
-	case Qt::Key_Print: keyName = "Print"; break;
-//TODO
-	//case Qt::Key_: keyName = "Snapshot"; break;
-	case Qt::Key_Insert: keyName = "Insert"; break;
-	//case Qt::Key_: keyName = "Num0"; break;
-	//case Qt::Key_: keyName = "Num1"; break;
-	//case Qt::Key_: keyName = "Num2"; break;
-	//case Qt::Key_: keyName = "Num3"; break;
-	//case Qt::Key_: keyName = "Num4"; break;
-	//case Qt::Key_: keyName = "Num5"; break;
-	//case Qt::Key_: keyName = "Num6"; break;
-	//case Qt::Key_: keyName = "Num7"; break;
-	//case Qt::Key_: keyName = "Num8"; break;
-	//case Qt::Key_: keyName = "Num9"; break;
-	case Qt::Key_F1: keyName = "F1"; break;
-	case Qt::Key_F2: keyName = "F2"; break;
-	case Qt::Key_F3: keyName = "F3"; break;
-	case Qt::Key_F4: keyName = "F4"; break;
-	case Qt::Key_F5: keyName = "F5"; break;
-	case Qt::Key_F6: keyName = "F6"; break;
-	case Qt::Key_F7: keyName = "F7"; break;
-	case Qt::Key_F8: keyName = "F8"; break;
-	case Qt::Key_F9: keyName = "F9"; break;
-	case Qt::Key_F10: keyName = "F10"; break;
-	case Qt::Key_F11: keyName = "F11"; break;
-	case Qt::Key_F12: keyName = "F12"; break;
-	case Qt::Key_NumLock: keyName = "NumLock"; break;
-	case Qt::Key_ScrollLock: keyName = "ScrollLock"; break;
-	case Qt::Key_PageUp: keyName = "PgUp"; break;
-	case Qt::Key_PageDown: keyName = "PgDn"; break;
-//TODO
-	//case Qt::Key_MPAD_SPACE: keyName = "NumSpace"; break
-	//case Qt::Key_MPAD_TAB: keyName = "NumTab"; break;
-	//case Qt::Key_MPAD_ENTER: keyName = "NumEnter"; break;
-	//case Qt::Key_MPAD_HOME: keyName = "NumHome"; break;
-	//case Qt::Key_MPAD_LEFT: keyName = "NumLeft"; break;
-	//case Qt::Key_MPAD_UP: keyName = "NumUp"; break;
-	//case Qt::Key_MPAD_RIGHT: keyName = "NumRight"; break;
-	//case Qt::Key_MPAD_DOWN: keyName = "NumDown"; break;
-	//case Qt::Key_MPAD_PAGEUP: keyName = "NumPgUp"; break;
-	//case Qt::Key_MPAD_PAGEDOWN: keyName = "NumPgDn"; break;
-	//case Qt::Key_MPAD_END: keyName = "NumEnd"; break;
-	//case Qt::Key_MPAD_BEGIN: keyName = "NumHome"; break;
-	//case Qt::Key_MPAD_INSERT: keyName = "NumIns"; break;
-	//case Qt::Key_MPAD_DELETE: keyName = "NumDel"; break;
-
-	default: keyName = static_cast<char>(keyCode); break;
-	}
-
-	return keyName;
+	UpdateLabel();
 }
 
 void PadSettingsDialog::UpdateLabel()
 {
 	// Get button labels from .ini
-
-//TODO should work with g_kbpad_config linked
-	//b_up_lstick->setText(GetKeyName(g_kbpad_config.left_stick_up));
-	//b_down_lstick->setText(GetKeyName(g_kbpad_config.left_stick_down));
-	//b_left_lstick->setText(GetKeyName(g_kbpad_config.left_stick_left));
-	//b_right_lstick->setText(GetKeyName(g_kbpad_config.left_stick_right));
-	//
-	//b_up->setText(GetKeyName(g_kbpad_config.up));
-	//b_down->setText(GetKeyName(g_kbpad_config.down));
-	//b_left->setText(GetKeyName(g_kbpad_config.left));
-	//b_right->setText(GetKeyName(g_kbpad_config.right));
-	//
-	//b_shift_l1->setText(GetKeyName(g_kbpad_config.l1));
-	//b_shift_l2->setText(GetKeyName(g_kbpad_config.l2));
-	//b_shift_l3->setText(GetKeyName(g_kbpad_config.l3));
-	//
-	//b_start->setText(GetKeyName(g_kbpad_config.start));
-	//b_select->setText(GetKeyName(g_kbpad_config.select));
-	//
-	//b_shift_r1->setText(GetKeyName(g_kbpad_config.r1));
-	//b_shift_r2->setText(GetKeyName(g_kbpad_config.r2));
-	//b_shift_r3->setText(GetKeyName(g_kbpad_config.r3));
-	//
-	//b_square->setText(GetKeyName(g_kbpad_config.square));
-	//b_cross->setText(GetKeyName(g_kbpad_config.cross));
-	//b_circle->setText(GetKeyName(g_kbpad_config.circle));
-	//b_triangle->setText(GetKeyName(g_kbpad_config.triangle));
-	//
-	//b_up_rstick->setText(GetKeyName(g_kbpad_config.right_stick_up));
-	//b_down_rstick->setText(GetKeyName(g_kbpad_config.right_stick_down));
-	//b_left_rstick->setText(GetKeyName(g_kbpad_config.right_stick_left));
-	//b_right_rstick->setText(GetKeyName(g_kbpad_config.right_stick_right));
+	b_up_lstick->setText(GetKeyName(g_kbpad_config.left_stick_up));
+	b_down_lstick->setText(GetKeyName(g_kbpad_config.left_stick_down));
+	b_left_lstick->setText(GetKeyName(g_kbpad_config.left_stick_left));
+	b_right_lstick->setText(GetKeyName(g_kbpad_config.left_stick_right));
+	
+	b_up->setText(GetKeyName(g_kbpad_config.up));
+	b_down->setText(GetKeyName(g_kbpad_config.down));
+	b_left->setText(GetKeyName(g_kbpad_config.left));
+	b_right->setText(GetKeyName(g_kbpad_config.right));
+	
+	b_shift_l1->setText(GetKeyName(g_kbpad_config.l1));
+	b_shift_l2->setText(GetKeyName(g_kbpad_config.l2));
+	b_shift_l3->setText(GetKeyName(g_kbpad_config.l3));
+	
+	b_start->setText(GetKeyName(g_kbpad_config.start));
+	b_select->setText(GetKeyName(g_kbpad_config.select));
+	
+	b_shift_r1->setText(GetKeyName(g_kbpad_config.r1));
+	b_shift_r2->setText(GetKeyName(g_kbpad_config.r2));
+	b_shift_r3->setText(GetKeyName(g_kbpad_config.r3));
+	
+	b_square->setText(GetKeyName(g_kbpad_config.square));
+	b_cross->setText(GetKeyName(g_kbpad_config.cross));
+	b_circle->setText(GetKeyName(g_kbpad_config.circle));
+	b_triangle->setText(GetKeyName(g_kbpad_config.triangle));
+	
+	b_up_rstick->setText(GetKeyName(g_kbpad_config.right_stick_up));
+	b_down_rstick->setText(GetKeyName(g_kbpad_config.right_stick_down));
+	b_left_rstick->setText(GetKeyName(g_kbpad_config.right_stick_left));
+	b_right_rstick->setText(GetKeyName(g_kbpad_config.right_stick_right));
 }
 
 void PadSettingsDialog::ResetParameters()
 {
-//TODO should work with g_kbpad_config linked
-	//g_kbpad_config.left_stick_up = g_kbpad_config.left_stick_up.def;
-	//g_kbpad_config.left_stick_down = g_kbpad_config.left_stick_down.def;
-	//g_kbpad_config.left_stick_left = g_kbpad_config.left_stick_left.def;
-	//g_kbpad_config.left_stick_right = g_kbpad_config.left_stick_right.def;
-	//
-	//g_kbpad_config.up = g_kbpad_config.up.def;
-	//g_kbpad_config.down = g_kbpad_config.down.def;
-	//g_kbpad_config.left = g_kbpad_config.left.def;
-	//g_kbpad_config.right = g_kbpad_config.right.def;
-	//
-	//g_kbpad_config.l1 = g_kbpad_config.l1.def;
-	//g_kbpad_config.l2 = g_kbpad_config.l2.def;
-	//g_kbpad_config.l3 = g_kbpad_config.l3.def;
-	//
-	//g_kbpad_config.start = g_kbpad_config.start.def;
-	//g_kbpad_config.select = g_kbpad_config.select.def;
-	//
-	//g_kbpad_config.r1 = g_kbpad_config.r1.def;
-	//g_kbpad_config.r2 = g_kbpad_config.r2.def;
-	//g_kbpad_config.r3 = g_kbpad_config.r3.def;
-	//
-	//g_kbpad_config.square = g_kbpad_config.square.def;
-	//g_kbpad_config.cross = g_kbpad_config.cross.def;
-	//g_kbpad_config.circle = g_kbpad_config.circle.def;
-	//g_kbpad_config.triangle = g_kbpad_config.triangle.def;
-	//
-	//g_kbpad_config.right_stick_up = g_kbpad_config.right_stick_up.def;
-	//g_kbpad_config.right_stick_down = g_kbpad_config.right_stick_down.def;
-	//g_kbpad_config.right_stick_left = g_kbpad_config.right_stick_left.def;
-	//g_kbpad_config.right_stick_right = g_kbpad_config.right_stick_right.def;
+	g_kbpad_config.left_stick_up = g_kbpad_config.left_stick_up.def;
+	g_kbpad_config.left_stick_down = g_kbpad_config.left_stick_down.def;
+	g_kbpad_config.left_stick_left = g_kbpad_config.left_stick_left.def;
+	g_kbpad_config.left_stick_right = g_kbpad_config.left_stick_right.def;
+	
+	g_kbpad_config.up = g_kbpad_config.up.def;
+	g_kbpad_config.down = g_kbpad_config.down.def;
+	g_kbpad_config.left = g_kbpad_config.left.def;
+	g_kbpad_config.right = g_kbpad_config.right.def;
+	
+	g_kbpad_config.l1 = g_kbpad_config.l1.def;
+	g_kbpad_config.l2 = g_kbpad_config.l2.def;
+	g_kbpad_config.l3 = g_kbpad_config.l3.def;
+	
+	g_kbpad_config.start = g_kbpad_config.start.def;
+	g_kbpad_config.select = g_kbpad_config.select.def;
+	
+	g_kbpad_config.r1 = g_kbpad_config.r1.def;
+	g_kbpad_config.r2 = g_kbpad_config.r2.def;
+	g_kbpad_config.r3 = g_kbpad_config.r3.def;
+	
+	g_kbpad_config.square = g_kbpad_config.square.def;
+	g_kbpad_config.cross = g_kbpad_config.cross.def;
+	g_kbpad_config.circle = g_kbpad_config.circle.def;
+	g_kbpad_config.triangle = g_kbpad_config.triangle.def;
+	
+	g_kbpad_config.right_stick_up = g_kbpad_config.right_stick_up.def;
+	g_kbpad_config.right_stick_down = g_kbpad_config.right_stick_down.def;
+	g_kbpad_config.right_stick_left = g_kbpad_config.right_stick_left.def;
+	g_kbpad_config.right_stick_right = g_kbpad_config.right_stick_right.def;
 }
 
 void PadSettingsDialog::UpdateTimerLabel(const u32 id)
@@ -536,9 +463,6 @@ void PadSettingsDialog::SwitchButtons(const bool IsEnabled)
 	b_reset->setEnabled(IsEnabled);
 }
 
-// TODO: rewrite with std::chrono or wxTimer
-#include <time.h>
-
 void PadSettingsDialog::RunTimer(const u32 seconds, const u32 id)
 {
 	m_seconds = seconds;
@@ -557,6 +481,149 @@ void PadSettingsDialog::RunTimer(const u32 seconds, const u32 id)
 		{
 			m_seconds = 0;
 			break;
+		}
+	}
+}
+
+void PadSettingsDialog::Init(const u32 max_connect)
+{
+	memset(&m_info, 0, sizeof(PadInfo));
+	m_info.max_connect = max_connect;
+	LoadSettings();
+	m_info.now_connect = std::min(m_pads.size(), (size_t)max_connect);
+}
+
+void PadSettingsDialog::LoadSettings()
+{
+	g_kbpad_config.load();
+
+	//Fixed assign change, default is both sensor and press off
+	m_pads.emplace_back(
+		CELL_PAD_STATUS_CONNECTED | CELL_PAD_STATUS_ASSIGN_CHANGES,
+		CELL_PAD_SETTING_PRESS_OFF | CELL_PAD_SETTING_SENSOR_OFF,
+		CELL_PAD_CAPABILITY_PS3_CONFORMITY | CELL_PAD_CAPABILITY_PRESS_MODE,
+		CELL_PAD_DEV_TYPE_STANDARD);
+
+	m_pads[0].m_buttons.emplace_back(CELL_PAD_BTN_OFFSET_DIGITAL1, g_kbpad_config.left, CELL_PAD_CTRL_LEFT);
+	m_pads[0].m_buttons.emplace_back(CELL_PAD_BTN_OFFSET_DIGITAL1, g_kbpad_config.down, CELL_PAD_CTRL_DOWN);
+	m_pads[0].m_buttons.emplace_back(CELL_PAD_BTN_OFFSET_DIGITAL1, g_kbpad_config.right, CELL_PAD_CTRL_RIGHT);
+	m_pads[0].m_buttons.emplace_back(CELL_PAD_BTN_OFFSET_DIGITAL1, g_kbpad_config.up, CELL_PAD_CTRL_UP);
+	m_pads[0].m_buttons.emplace_back(CELL_PAD_BTN_OFFSET_DIGITAL1, g_kbpad_config.start, CELL_PAD_CTRL_START);
+	m_pads[0].m_buttons.emplace_back(CELL_PAD_BTN_OFFSET_DIGITAL1, g_kbpad_config.r3, CELL_PAD_CTRL_R3);
+	m_pads[0].m_buttons.emplace_back(CELL_PAD_BTN_OFFSET_DIGITAL1, g_kbpad_config.l3, CELL_PAD_CTRL_L3);
+	m_pads[0].m_buttons.emplace_back(CELL_PAD_BTN_OFFSET_DIGITAL1, g_kbpad_config.select, CELL_PAD_CTRL_SELECT);
+
+	m_pads[0].m_buttons.emplace_back(CELL_PAD_BTN_OFFSET_DIGITAL2, g_kbpad_config.square, CELL_PAD_CTRL_SQUARE);
+	m_pads[0].m_buttons.emplace_back(CELL_PAD_BTN_OFFSET_DIGITAL2, g_kbpad_config.cross, CELL_PAD_CTRL_CROSS);
+	m_pads[0].m_buttons.emplace_back(CELL_PAD_BTN_OFFSET_DIGITAL2, g_kbpad_config.circle, CELL_PAD_CTRL_CIRCLE);
+	m_pads[0].m_buttons.emplace_back(CELL_PAD_BTN_OFFSET_DIGITAL2, g_kbpad_config.triangle, CELL_PAD_CTRL_TRIANGLE);
+	m_pads[0].m_buttons.emplace_back(CELL_PAD_BTN_OFFSET_DIGITAL2, g_kbpad_config.r1, CELL_PAD_CTRL_R1);
+	m_pads[0].m_buttons.emplace_back(CELL_PAD_BTN_OFFSET_DIGITAL2, g_kbpad_config.l1, CELL_PAD_CTRL_L1);
+	m_pads[0].m_buttons.emplace_back(CELL_PAD_BTN_OFFSET_DIGITAL2, g_kbpad_config.r2, CELL_PAD_CTRL_R2);
+	m_pads[0].m_buttons.emplace_back(CELL_PAD_BTN_OFFSET_DIGITAL2, g_kbpad_config.l2, CELL_PAD_CTRL_L2);
+
+	m_pads[0].m_sticks.emplace_back(CELL_PAD_BTN_OFFSET_ANALOG_LEFT_X, g_kbpad_config.left_stick_left, g_kbpad_config.left_stick_right);
+	m_pads[0].m_sticks.emplace_back(CELL_PAD_BTN_OFFSET_ANALOG_LEFT_Y, g_kbpad_config.left_stick_up, g_kbpad_config.left_stick_down);
+	m_pads[0].m_sticks.emplace_back(CELL_PAD_BTN_OFFSET_ANALOG_RIGHT_X, g_kbpad_config.right_stick_left, g_kbpad_config.right_stick_right);
+	m_pads[0].m_sticks.emplace_back(CELL_PAD_BTN_OFFSET_ANALOG_RIGHT_Y, g_kbpad_config.right_stick_up, g_kbpad_config.right_stick_down);
+}
+
+const QString PadSettingsDialog::GetKeyName(const u32 keyCode)
+{
+	QString keyName;
+
+	switch (keyCode)
+	{
+	case Qt::Key_unknown: LOG_ERROR(HLE, "Invalid key code"); keyName = "ERROR!"; break;
+	case Qt::Key_Backspace: keyName = "BackSpace"; break;
+	case Qt::Key_Tab: keyName = "Tab"; break;
+	case Qt::Key_Return: keyName = "Enter"; break;
+	case Qt::Key_Escape: keyName = "Esc"; break;
+	case Qt::Key_Space: keyName = "Space"; break;
+	case Qt::Key_Delete: keyName = "Delete"; break;
+	case Qt::Key_Shift: keyName = "Shift"; break;
+	case Qt::Key_Alt: keyName = "ALT"; break;
+	case Qt::Key_Control: keyName = "CTRL"; break;
+	case Qt::Key_Pause: keyName = "Pause"; break;
+	case Qt::Key_CapsLock: keyName = "CapsLock"; break;
+	case Qt::Key_End: keyName = "End"; break;
+	case Qt::Key_Home: keyName = "Home"; break;
+	case Qt::Key_Left: keyName = "Left"; break;
+	case Qt::Key_Up: keyName = "Up"; break;
+	case Qt::Key_Right: keyName = "Right"; break;
+	case Qt::Key_Down: keyName = "Down"; break;
+	case Qt::Key_Select: keyName = "Select"; break;
+	case Qt::Key_Print: keyName = "Print"; break;
+	//TODO
+	//case Qt::Key_: keyName = "Snapshot"; break;
+	case Qt::Key_Insert: keyName = "Insert"; break;
+	//TODO
+	//case Qt::Key_Num_5: keyName = "Num0"; break;
+	//case Qt::Key_: keyName = "Num1"; break;
+	//case Qt::Key_: keyName = "Num2"; break;
+	//case Qt::Key_: keyName = "Num3"; break;
+	//case Qt::Key_: keyName = "Num4"; break;
+	//case Qt::Key_: keyName = "Num5"; break;
+	//case Qt::Key_: keyName = "Num6"; break;
+	//case Qt::Key_: keyName = "Num7"; break;
+	//case Qt::Key_: keyName = "Num8"; break;
+	//case Qt::Key_: keyName = "Num9"; break;
+	case Qt::Key_F1: keyName = "F1"; break;
+	case Qt::Key_F2: keyName = "F2"; break;
+	case Qt::Key_F3: keyName = "F3"; break;
+	case Qt::Key_F4: keyName = "F4"; break;
+	case Qt::Key_F5: keyName = "F5"; break;
+	case Qt::Key_F6: keyName = "F6"; break;
+	case Qt::Key_F7: keyName = "F7"; break;
+	case Qt::Key_F8: keyName = "F8"; break;
+	case Qt::Key_F9: keyName = "F9"; break;
+	case Qt::Key_F10: keyName = "F10"; break;
+	case Qt::Key_F11: keyName = "F11"; break;
+	case Qt::Key_F12: keyName = "F12"; break;
+	case Qt::Key_NumLock: keyName = "NumLock"; break;
+	case Qt::Key_ScrollLock: keyName = "ScrollLock"; break;
+	case Qt::Key_PageUp: keyName = "PgUp"; break;
+	case Qt::Key_PageDown: keyName = "PgDn"; break;
+	//TODO
+	//case Qt::Key_MPAD_SPACE: keyName = "NumSpace"; break
+	//case Qt::Key_MPAD_TAB: keyName = "NumTab"; break;
+	//case Qt::Key_MPAD_ENTER: keyName = "NumEnter"; break;
+	//case Qt::Key_MPAD_HOME: keyName = "NumHome"; break;
+	//case Qt::Key_MPAD_LEFT: keyName = "NumLeft"; break;
+	//case Qt::Key_MPAD_UP: keyName = "NumUp"; break;
+	//case Qt::Key_MPAD_RIGHT: keyName = "NumRight"; break;
+	//case Qt::Key_MPAD_DOWN: keyName = "NumDown"; break;
+	//case Qt::Key_MPAD_PAGEUP: keyName = "NumPgUp"; break;
+	//case Qt::Key_MPAD_PAGEDOWN: keyName = "NumPgDn"; break;
+	//case Qt::Key_MPAD_END: keyName = "NumEnd"; break;
+	//case Qt::Key_MPAD_BEGIN: keyName = "NumHome"; break;
+	//case Qt::Key_MPAD_INSERT: keyName = "NumIns"; break;
+	//case Qt::Key_MPAD_DELETE: keyName = "NumDel"; break;
+
+	default: keyName = static_cast<char>(keyCode); break;
+	}
+
+	return keyName;
+}
+
+void PadSettingsDialog::OnPadButtonClicked(int id)
+{
+	if (id != id_reset_parameters && id != id_ok)
+	{
+		m_button_id = id;
+		SwitchButtons(false); // disable all buttons, needed for using Space, Enter and other specific buttons
+		//RunTimer(3, event.GetId()); // TODO: Currently, timer disabled. Use by later, have some strange problems
+		//SwitchButtons(true); // needed, if timer enabled
+		UpdateLabel();
+	}
+
+	else
+	{
+		switch (id)
+		{
+		case id_reset_parameters: ResetParameters(); UpdateLabel(); break;
+		case id_ok: g_kbpad_config.save(); QDialog::accept(); break;
+		case id_cancel: break;
 		}
 	}
 }
