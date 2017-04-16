@@ -133,30 +133,30 @@ struct PadButtons
 
 class PadSettingsDialog : public QDialog, PadButtons, PadHandlerBase
 {
-    Q_OBJECT
+	Q_OBJECT
 
 private slots :
-		void OnPadButtonClicked(int id);
+	void OnPadButtonClicked(int id);
 
 private:
-			u32 m_seconds;
-			u32 m_button_id;
-			bool m_key_pressed;
-			KeyboardPadConfig g_kbpad_config;
-			QAction *onButtonClickedAct;
+	u32 m_seconds;
+	u32 m_button_id;
+	bool m_key_pressed;
+	KeyboardPadConfig g_kbpad_config;
+	QAction *onButtonClickedAct;
 
 public:
-				// TODO get Init to work
-				virtual void Init(const u32 max_connect) override;
-        explicit PadSettingsDialog(QWidget *parent = 0);
-				void keyPressEvent(QKeyEvent *keyEvent);
-				void UpdateLabel();
-				void ResetParameters();
-				void UpdateTimerLabel(const u32 id);
-				void SwitchButtons(const bool IsEnabled);
-				void RunTimer(const u32 seconds, const u32 id);
-				void LoadSettings();
-				const QString GetKeyName(const u32 keyCode);
+	// TODO get Init to work
+	virtual void Init(const u32 max_connect) override;
+	explicit PadSettingsDialog(QWidget *parent = 0);
+	void keyPressEvent(QKeyEvent *keyEvent);
+	void UpdateLabel();
+	void ResetParameters();
+	void UpdateTimerLabel(const u32 id);
+	void SwitchButtons(const bool IsEnabled);
+	void RunTimer(const u32 seconds, const u32 id);
+	void LoadSettings();
+	const QString GetKeyName(const u32 keyCode);
 };
 
 #endif // PADSETTINGS_H
