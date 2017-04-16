@@ -21,6 +21,7 @@ private slots:
 	void BootElf();
 	void BootGame();
 	void InstallPkg();
+	void InstallPup();
 	void Pause();
 	void Stop();
 	void SendOpenSysMenu();
@@ -41,10 +42,13 @@ private slots:
 	void ShowDebugFrame();
 	void ShowLogFrame();
 	void ShowGameListFrame();
+	void HideGameIcons();
+	void RefreshGameList();
+	void About();
+
 	void OnDebugFrameClosed();
 	void OnLogFrameClosed();
 	void OnGameListFrameClosed();
-	void About();
 
 private:
 	void CreateActions();
@@ -54,7 +58,8 @@ private:
 	// Actions
 	QAction *bootElfAct;
 	QAction *bootGameAct;
-	QAction *bootInstallAct;
+	QAction *bootInstallPkgAct;
+	QAction *bootInstallPupAct;
 	QAction *sysPauseAct;
 	QAction *sysStopAct;
 	QAction *sysSendOpenMenuAct;
@@ -76,6 +81,8 @@ private:
 	QAction *showDebuggerAct;
 	QAction *showLogAct;
 	QAction *showGameListAct;
+	QAction *hideGameIconsAct;
+	QAction *refreshGameListAct;
 	QAction *aboutAct;
 	QAction *aboutQtAct;
 

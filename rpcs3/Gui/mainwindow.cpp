@@ -15,6 +15,7 @@
 #include "padsettingsdialog.h"
 #include "AutoPauseSettingsDialog.h"
 #include "mainwindow.h"
+#include "rpcs3_version.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -22,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 	CreateMenus();
 	CreateDockWindows();
 
-	setWindowTitle("RPCS3 v");
+	setWindowTitle(QString::fromStdString("RPCS3 v" + rpcs3::version.to_string()));
 }
 
 MainWindow::~MainWindow()
@@ -76,6 +77,26 @@ void MainWindow::InstallPkg()
 		qDebug() << "Rejected!";
 		return;
 	}
+
+	QString dir = dlg.getOpenFileName();
+	qDebug(qUtf8Printable(dir));
+
+}
+
+void MainWindow::InstallPup()
+{
+	QFileDialog dlg(this, "Select PUP", "", "PUP files (*.pup);;All files (*.*)");
+	dlg.setAcceptMode(QFileDialog::AcceptOpen);
+	dlg.setFileMode(QFileDialog::ExistingFile);
+
+	if (dlg.exec() == QDialog::Rejected)
+	{
+		qDebug() << "Rejected!";
+		return;
+	}
+
+	QString dir = dlg.getOpenFileName();
+	qDebug(qUtf8Printable(dir));
 }
 
 void MainWindow::Pause()
@@ -184,18 +205,52 @@ void MainWindow::DecryptSPRXLibraries()
 	qDebug() << "Finished decrypting all SPRX libraries.";
 }
 
+void MainWindow::ShowDebugFrame()
+{
+	debuggerFrame->show();
+	showDebuggerAct->setEnabled(false);
+}
+
+void MainWindow::ShowLogFrame()
+{
+	logFrame->show();
+	showLogAct->setEnabled(false);
+}
+
+void MainWindow::ShowGameListFrame()
+{
+	gameListFrame->show();
+	showGameListAct->setEnabled(false);
+}
+
+void MainWindow::HideGameIcons()
+{
+	qDebug() << "MainWindow::HideGameIcons()";
+}
+
+void MainWindow::RefreshGameList()
+{
+	qDebug() << "MainWindow::RefreshGameList()";
+}
+
 void MainWindow::About()
 {
+	
 	QString translatedTextAboutCaption;
 	translatedTextAboutCaption = tr(
-				"<h3>RPCS3</h3>"
-				"<p>A PlayStation 3 emulator and debugger.<br>"
-				"RPCS3 Version: VER_STUB</p>");
+				"<h1>RPCS3</h1>"
+				"A PlayStation 3 emulator and debugger.<br>"
+				"RPCS3 Version: %1").arg(QString::fromStdString(rpcs3::version.to_string())
+					);
 	QString translatedTextAboutText;
 	translatedTextAboutText = tr(
-				"<p>Developers: DH, AlexAltea, Hykem, Oil, Nekotekina, elisha464, Bigpet, vlj</p>"
-				"<p>Thanks: BlackDaemon, Aishou, krofna, xsacha</p>"
-				"<p>Please see "
+				"<br><p><b>Developers:</b> Developers: ¬DH, ¬AlexAltea, ¬Hykem, Oil, Nekotekina, Bigpet, ¬gopalsr83, ¬tambry, "
+				"vlj, kd-11, jarveson, raven02, AniLeo, cornytrace, ssshadow, Numan</p>"
+				"<p><b>Contributors:</b> BlackDaemon, elisha464, Aishou, krofna, xsacha, danilaml, unknownbrackets, Zangetsu38, "
+				"lioncashachurch, darkf, Syphurith, Blaypeg, Survanium90, georgemoralis, ikki84</p>"
+				"<p><b>Supporters:</b> Howard Garrison, EXPotemkin, Marko V., danhp, Jake (5315825), Ian Reid, Tad Sherlock, Tyler Friesen, "
+				"Folzar, Payton Williams, RedPill Australia, yanghong</p>"
+				"<br><p>Please see "
 				"<a href=\"https://%1/\">GitHub</a>, "
 				"<a href=\"https://%2/\">Website</a>, "
 				"<a href=\"http://%3/\">Forum</a> or "
@@ -213,24 +268,6 @@ void MainWindow::About()
 	about.setInformativeText(translatedTextAboutText);
 
 	about.exec();
-}
-
-void MainWindow::ShowDebugFrame()
-{
-	debuggerFrame->show();
-	showDebuggerAct->setEnabled(false);
-}
-
-void MainWindow::ShowLogFrame()
-{
-	logFrame->show();
-	showLogAct->setEnabled(false);
-}
-
-void MainWindow::ShowGameListFrame()
-{
-	gameListFrame->show();
-	showGameListAct->setEnabled(false);
 }
 
 void MainWindow::OnDebugFrameClosed()
@@ -253,11 +290,14 @@ void MainWindow::CreateActions()
 	bootElfAct = new QAction(tr("Boot (S)ELF file"), this);
 	connect(bootElfAct, &QAction::triggered, this, &MainWindow::BootElf);
 
-	bootGameAct = new QAction(tr("Boot &game"), this);
+	bootGameAct = new QAction(tr("Boot &Game"), this);
 	connect(bootGameAct, &QAction::triggered, this, &MainWindow::BootGame);
 
-	bootInstallAct = new QAction(tr("&Install PKG"), this);
-	connect(bootInstallAct, &QAction::triggered, this, &MainWindow::InstallPkg);
+	bootInstallPkgAct = new QAction(tr("&Install PKG"), this);
+	connect(bootInstallPkgAct, &QAction::triggered, this, &MainWindow::InstallPkg);
+
+	bootInstallPupAct = new QAction(tr("&Install Firmware"), this);
+	connect(bootInstallPupAct, &QAction::triggered, this, &MainWindow::InstallPkg);
 
 	exitAct = new QAction(tr("E&xit"), this);
 	exitAct->setShortcuts(QKeySequence::Quit);
@@ -339,6 +379,12 @@ void MainWindow::CreateActions()
 	showGameListAct->setEnabled(false);
 	connect(showGameListAct, &QAction::triggered, this, &MainWindow::ShowGameListFrame);
 
+	hideGameIconsAct = new QAction(tr("&Hide Game Icons"), this);
+	connect(hideGameIconsAct, &QAction::triggered, this, &MainWindow::HideGameIcons);
+
+	refreshGameListAct = new QAction(tr("&Refresh Game List"), this);
+	connect(refreshGameListAct, &QAction::triggered, this, &MainWindow::RefreshGameList);
+
 	aboutAct = new QAction(tr("&About"), this);
 	aboutAct->setStatusTip(tr("Show the application's About box"));
 	connect(aboutAct, &QAction::triggered, this, &MainWindow::About);
@@ -354,15 +400,10 @@ void MainWindow::CreateMenus()
 	bootMenu->addAction(bootElfAct);
 	bootMenu->addAction(bootGameAct);
 	bootMenu->addSeparator();
-	bootMenu->addAction(bootInstallAct);
+	bootMenu->addAction(bootInstallPkgAct);
+	bootMenu->addAction(bootInstallPupAct);
 	bootMenu->addSeparator();
 	bootMenu->addAction(exitAct);
-
-	QMenu *viewMenu = menuBar()->addMenu(tr("&View"));
-	viewMenu->addAction(showDebuggerAct);
-	viewMenu->addAction(showLogAct);
-	viewMenu->addSeparator();
-	viewMenu->addAction(showGameListAct);
 
 	QMenu *sysMenu = menuBar()->addMenu(tr("&System"));
 	sysMenu->addAction(sysPauseAct);
@@ -381,7 +422,7 @@ void MainWindow::CreateMenus()
 	confMenu->addAction(confVhddManagerAct);
 	confMenu->addAction(confSavedataManagerAct);
 
-	QMenu *toolsMenu = menuBar()->addMenu(tr("&Tools"));
+	QMenu *toolsMenu = menuBar()->addMenu(tr("&Utilities"));
 	toolsMenu->addAction(toolsCompilerAct);
 	toolsMenu->addAction(toolsCgDisasmAct);
 	toolsMenu->addAction(toolsKernelExplorerAct);
@@ -390,6 +431,14 @@ void MainWindow::CreateMenus()
 	toolsMenu->addAction(toolsStringSearchAct);
 	toolsMenu->addSeparator();
 	toolsMenu->addAction(toolsSecryptSprxLibsAct);
+
+	QMenu *viewMenu = menuBar()->addMenu(tr("&View"));
+	viewMenu->addAction(showLogAct);
+	viewMenu->addAction(showDebuggerAct);
+	viewMenu->addSeparator();
+	viewMenu->addAction(showGameListAct);
+	viewMenu->addAction(hideGameIconsAct);
+	viewMenu->addAction(refreshGameListAct);
 
 	QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
 	helpMenu->addAction(aboutAct);
