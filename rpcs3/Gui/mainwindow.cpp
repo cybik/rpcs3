@@ -373,6 +373,7 @@ void MainWindow::CreateActions()
 	connect(showDebuggerAct, &QAction::triggered, this, &MainWindow::ShowDebugFrame);
 
 	showLogAct = new QAction(tr("Show Log/TTY"), this);
+	showLogAct->setEnabled(false);
 	connect(showLogAct, &QAction::triggered, this, &MainWindow::ShowLogFrame);
 
 	showGameListAct = new QAction(tr("Show GameList"), this);
@@ -456,7 +457,6 @@ void MainWindow::CreateDockWindows()
 	addDockWidget(Qt::RightDockWidgetArea, debuggerFrame);
 
 	debuggerFrame->hide();
-	logFrame->hide();
 
 	connect(logFrame, &LogFrame::LogFrameClosed, this, &MainWindow::OnLogFrameClosed);
 	connect(debuggerFrame, &DebuggerFrame::DebugFrameClosed, this, &MainWindow::OnDebugFrameClosed);
