@@ -39,9 +39,9 @@ private slots:
 	void RSXDebugger();
 	void StringSearch();
 	void DecryptSPRXLibraries();
-	void ShowDebugFrame();
-	void ShowLogFrame();
-	void ShowGameListFrame();
+	void ToggleDebugFrame(bool state);
+	void ToggleLogFrame(bool state);
+	void ToggleGameListFrame(bool state);
 	void HideGameIcons();
 	void RefreshGameList();
 	void About();

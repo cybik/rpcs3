@@ -205,22 +205,40 @@ void MainWindow::DecryptSPRXLibraries()
 	qDebug() << "Finished decrypting all SPRX libraries.";
 }
 
-void MainWindow::ShowDebugFrame()
+void MainWindow::ToggleDebugFrame(bool state)
 {
-	debuggerFrame->show();
-	showDebuggerAct->setEnabled(false);
+	if (state)
+	{
+		debuggerFrame->show();
+	}
+	else
+	{
+		debuggerFrame->hide();
+	}
 }
 
-void MainWindow::ShowLogFrame()
+void MainWindow::ToggleLogFrame(bool state)
 {
-	logFrame->show();
-	showLogAct->setEnabled(false);
+	if (state)
+	{
+		logFrame->show();
+	}
+	else
+	{
+		logFrame->hide();
+	}
 }
 
-void MainWindow::ShowGameListFrame()
+void MainWindow::ToggleGameListFrame(bool state)
 {
-	gameListFrame->show();
-	showGameListAct->setEnabled(false);
+	if (state)
+	{
+		gameListFrame->show();
+	}
+	else
+	{
+		gameListFrame->hide();
+	}
 }
 
 void MainWindow::HideGameIcons()
@@ -272,17 +290,26 @@ void MainWindow::About()
 
 void MainWindow::OnDebugFrameClosed()
 {
-	showDebuggerAct->setEnabled(true);
+	if (showDebuggerAct->isChecked())
+	{
+		showDebuggerAct->setChecked(false);
+	}
 }
 
 void MainWindow::OnLogFrameClosed()
 {
-	showLogAct->setEnabled(true);
+	if (showLogAct->isChecked())
+	{
+		showLogAct->setChecked(false);
+	}
 }
 
 void MainWindow::OnGameListFrameClosed()
 {
-	showGameListAct->setEnabled(true);
+	if (showGameListAct->isChecked())
+	{
+		showGameListAct->setChecked(false);
+	}
 }
 
 void MainWindow::CreateActions()
@@ -370,15 +397,20 @@ void MainWindow::CreateActions()
 	connect(toolsSecryptSprxLibsAct, &QAction::triggered, this, &MainWindow::DecryptSPRXLibraries);
 
 	showDebuggerAct = new QAction(tr("Show Debugger"), this);
-	connect(showDebuggerAct, &QAction::triggered, this, &MainWindow::ShowDebugFrame);
+	showDebuggerAct->setCheckable(true);
+	showDebuggerAct->setChecked(false);
+	connect(showDebuggerAct, &QAction::triggered, this, &MainWindow::ToggleDebugFrame);
 
 	showLogAct = new QAction(tr("Show Log/TTY"), this);
-	showLogAct->setEnabled(false);
-	connect(showLogAct, &QAction::triggered, this, &MainWindow::ShowLogFrame);
+	showLogAct->setCheckable(true);
+	showLogAct->setChecked(true);
+	connect(showLogAct, &QAction::triggered, this, &MainWindow::ToggleLogFrame);
 
 	showGameListAct = new QAction(tr("Show GameList"), this);
-	showGameListAct->setEnabled(false);
-	connect(showGameListAct, &QAction::triggered, this, &MainWindow::ShowGameListFrame);
+	showGameListAct->setCheckable(true);
+	showGameListAct->setChecked(true);
+
+	connect(showGameListAct, &QAction::triggered, this, &MainWindow::ToggleGameListFrame);
 
 	hideGameIconsAct = new QAction(tr("&Hide Game Icons"), this);
 	connect(hideGameIconsAct, &QAction::triggered, this, &MainWindow::HideGameIcons);
