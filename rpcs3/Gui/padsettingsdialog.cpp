@@ -246,28 +246,28 @@ PadSettingsDialog::PadSettingsDialog(QWidget *parent) : QDialog(parent)
 
 	connect(padButtons, SIGNAL(buttonClicked(int)), this, SLOT(OnPadButtonClicked(int)));
 
-    // Main layout
-    QHBoxLayout *hbox1 = new QHBoxLayout;
-    hbox1->addWidget(roundStickL);
-    hbox1->addWidget(roundPadControls);
-    hbox1->addWidget(roundPadShiftsL);
-    hbox1->addWidget(roundPadSystem);
-    hbox1->addWidget(roundPadShiftsR);
-    hbox1->addWidget(roundPadButtons);
-    hbox1->addWidget(roundStickR);
+	// Main layout
+	QHBoxLayout *hbox1 = new QHBoxLayout;
+	hbox1->addWidget(roundStickL);
+	hbox1->addWidget(roundPadControls);
+	hbox1->addWidget(roundPadShiftsL);
+	hbox1->addWidget(roundPadSystem);
+	hbox1->addWidget(roundPadShiftsR);
+	hbox1->addWidget(roundPadButtons);
+	hbox1->addWidget(roundStickR);
 
-    QHBoxLayout *hbox2 = new QHBoxLayout;
-    hbox2->addWidget(b_reset);
-    hbox2->addStretch();
-    hbox2->addWidget(b_ok);
-    hbox2->addWidget(b_cancel);
+	QHBoxLayout *hbox2 = new QHBoxLayout;
+	hbox2->addWidget(b_reset);
+	hbox2->addStretch();
+	hbox2->addWidget(b_ok);
+	hbox2->addWidget(b_cancel);
 
-    QVBoxLayout *vbox = new QVBoxLayout;
-    vbox->addLayout(hbox1);
-    vbox->addLayout(hbox2);
-    setLayout(vbox);
+	QVBoxLayout *vbox = new QVBoxLayout;
+	vbox->addLayout(hbox1);
+	vbox->addLayout(hbox2);
+	setLayout(vbox);
 
-    setWindowTitle(tr("PAD Settings"));
+	setWindowTitle(tr("PAD Settings"));
 }
 
 void PadSettingsDialog::keyPressEvent(QKeyEvent *keyEvent)
@@ -388,38 +388,43 @@ void PadSettingsDialog::ResetParameters()
 
 void PadSettingsDialog::UpdateTimerLabel(const u32 id)
 {
+	// Lambda used to update label. The 47 is magical.
+	auto UpdateLabel = [=](QPushButton* target) {
+		target->setText(QString::number(m_seconds + 47));
+	};
+
 	switch (id)
 	{
-	case id_pad_lstick_left: b_left_lstick->setText(QString::number(m_seconds + 47)); break;
-	case id_pad_lstick_down: b_down_lstick->setText(QString::number(m_seconds + 47)); break;
-	case id_pad_lstick_right: b_right_lstick->setText(QString::number(m_seconds + 47)); break;
-	case id_pad_lstick_up: b_up_lstick->setText(QString::number(m_seconds + 47)); break;
+	case id_pad_lstick_left: UpdateLabel(b_left_lstick); break;
+	case id_pad_lstick_down: UpdateLabel(b_down_lstick); break;
+	case id_pad_lstick_right: UpdateLabel(b_right_lstick); break;
+	case id_pad_lstick_up: UpdateLabel(b_up_lstick); break;
 
-	case id_pad_left: b_left->setText(QString::number(m_seconds + 47)); break;
-	case id_pad_down: b_down->setText(QString::number(m_seconds + 47)); break;
-	case id_pad_right: b_right->setText(QString::number(m_seconds + 47)); break;
-	case id_pad_up: b_up->setText(QString::number(m_seconds + 47)); break;
+	case id_pad_left: UpdateLabel(b_left); break;
+	case id_pad_down: UpdateLabel(b_down); break;
+	case id_pad_right: UpdateLabel(b_right); break;
+	case id_pad_up: UpdateLabel(b_up); break;
 
-	case id_pad_l1: b_shift_l1->setText(QString::number(m_seconds + 47)); break;
-	case id_pad_l2: b_shift_l2->setText(QString::number(m_seconds + 47)); break;
-	case id_pad_l3: b_shift_l3->setText(QString::number(m_seconds + 47)); break;
+	case id_pad_l1: UpdateLabel(b_shift_l1); break;
+	case id_pad_l2: UpdateLabel(b_shift_l2); break;
+	case id_pad_l3: UpdateLabel(b_shift_l3); break;
 
-	case id_pad_start: b_start->setText(QString::number(m_seconds + 47)); break;
-	case id_pad_select: b_select->setText(QString::number(m_seconds + 47)); break;
+	case id_pad_start: UpdateLabel(b_start); break;
+	case id_pad_select: UpdateLabel(b_select); break;
 
-	case id_pad_r1: b_shift_r1->setText(QString::number(m_seconds + 47)); break;
-	case id_pad_r2: b_shift_r2->setText(QString::number(m_seconds + 47)); break;
-	case id_pad_r3: b_shift_r3->setText(QString::number(m_seconds + 47)); break;
+	case id_pad_r1: UpdateLabel(b_shift_r1); break;
+	case id_pad_r2: UpdateLabel(b_shift_r2); break;
+	case id_pad_r3: UpdateLabel(b_shift_r3); break;
 
-	case id_pad_square: b_square->setText(QString::number(m_seconds + 47)); break;
-	case id_pad_cross: b_cross->setText(QString::number(m_seconds + 47)); break;
-	case id_pad_circle: b_circle->setText(QString::number(m_seconds + 47)); break;
-	case id_pad_triangle: b_triangle->setText(QString::number(m_seconds + 47)); break;
+	case id_pad_square: UpdateLabel(b_square); break;
+	case id_pad_cross: UpdateLabel(b_cross); break;
+	case id_pad_circle: UpdateLabel(b_circle); break;
+	case id_pad_triangle: UpdateLabel(b_triangle); break;
 
-	case id_pad_rstick_left: b_left_rstick->setText(QString::number(m_seconds + 47)); break;
-	case id_pad_rstick_down: b_down_rstick->setText(QString::number(m_seconds + 47)); break;
-	case id_pad_rstick_right: b_right_rstick->setText(QString::number(m_seconds + 47)); break;
-	case id_pad_rstick_up: b_up_rstick->setText(QString::number(m_seconds + 47)); break;
+	case id_pad_rstick_left: UpdateLabel(b_left_rstick); break;
+	case id_pad_rstick_down: UpdateLabel(b_down_rstick); break;
+	case id_pad_rstick_right: UpdateLabel(b_right_rstick); break;
+	case id_pad_rstick_up: UpdateLabel(b_up_rstick); break;
 
 	default: LOG_ERROR(HLE, "Unknown button ID: %d", id); break;
 	}
