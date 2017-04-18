@@ -7,8 +7,7 @@
 #include <QAction>
 #include <QButtonGroup>
 
-#include "stdafx.h"
-#include "padsettingsdialog.h"
+#include "PadSettingsDialog.h"
 
 // TODO: rewrite with std::chrono or wxTimer
 #include <time.h>

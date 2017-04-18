@@ -2,14 +2,14 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 
-#include "coretab.h"
-#include "graphicstab.h"
-#include "audiotab.h"
-#include "inputtab.h"
-#include "misctab.h"
-#include "networkingtab.h"
-#include "systemtab.h"
-#include "settingsdialog.h"
+#include "CoreTab.h"
+#include "GraphicsTab.h"
+#include "AudioTab.h"
+#include "InputTab.h"
+#include "MiscTab.h"
+#include "NetworkingTab.h"
+#include "SystemTab.h"
+#include "SettingsDialog.h"
 
 SettingsDialog::SettingsDialog(QWidget *parent) : QDialog(parent)
 {

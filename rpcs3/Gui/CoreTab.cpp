@@ -5,7 +5,7 @@
 #include <QHBoxLayout>
 #include <QDebug>
 
-#include "coretab.h"
+#include "CoreTab.h"
 
 CoreTab::CoreTab(QWidget *parent) : QWidget(parent)
 {

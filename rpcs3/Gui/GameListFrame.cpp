@@ -1,4 +1,4 @@
-#include "gamelistframe.h"
+#include "GameListFrame.h"
 
 GameListFrame::GameListFrame(QWidget *parent) : QDockWidget(tr("Game List"), parent)
 {

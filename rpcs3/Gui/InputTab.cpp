@@ -3,7 +3,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
-#include "inputtab.h"
+#include "InputTab.h"
 
 InputTab::InputTab(QWidget *parent) : QWidget(parent)
 {

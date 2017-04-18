@@ -3,7 +3,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
-#include "networkingtab.h"
+#include "NetworkingTab.h"
 
 NetworkingTab::NetworkingTab(QWidget *parent) : QWidget(parent)
 {

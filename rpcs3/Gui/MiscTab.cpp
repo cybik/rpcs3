@@ -3,7 +3,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
-#include "misctab.h"
+#include "MiscTab.h"
 
 MiscTab::MiscTab(QWidget *parent) : QWidget(parent)
 {

@@ -5,6 +5,7 @@ set(RES_FILES "")
 include(cotire)
 
 project(rpcs3)
+set(CMAKE_AUTOMOC ON)
 
 # Generate git-version.h at build time.
 include(GetGitData)
@@ -13,6 +14,11 @@ configure_file(${CMAKE_CURRENT_LIST_DIR}/git-version.h.in ${CMAKE_CURRENT_LIST_D
 # Check for a sufficient compiler and set build options
 include(ConfigureCompiler)
 
+
+# bring in the qt
+# Find the QtWidgets library. This also includes QtWidget dependencies.
+find_package(Qt5Widgets REQUIRED)
+include(Qt)
 
 if(WIN32)
 	add_definitions(-DUNICODE)
@@ -26,7 +32,6 @@ if(WIN32)
 endif()
 
 if(NOT MSVC)
-	add_definitions(-DwxGUI)
 	if($ENV{CI})
 		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O1") # fix for travis gcc OoM crash. Might be fixed with the move to containers.
 	endif()
@@ -69,8 +74,6 @@ if(NOT WIN32)
 	add_definitions(-DGLX_GLXEXT_PROTOTYPES)
 endif()
 
-set(wxWidgets_USE_STATIC ON)
-find_package(wxWidgets COMPONENTS core base net aui gl xml REQUIRED)
 if(NOT MSVC)
 	if(APPLE)
 		find_path(GLEW_INCLUDE_DIR GL/glew.h
@@ -90,8 +93,6 @@ endif()
 find_package(OpenGL REQUIRED)
 find_package(OpenAL REQUIRED)
 find_package(LLVM 4.0 CONFIG)
-
-include("${wxWidgets_USE_FILE}")
 
 if(APPLE)
 	set(PLATFORM_ARCH "macosx/x86_64")
@@ -123,7 +124,6 @@ endif()
 
 include_directories(
 ${GLEW_INCLUDE_DIR}
-${wxWidgets_INCLUDE_DIRS}
 ${ZLIB_INCLUDE_DIR}
 ${OPENAL_INCLUDE_DIR}
 ${LLVM_INCLUDE_DIRS}
@@ -217,9 +217,9 @@ if(WIN32)
 	else()
 		target_link_libraries(rpcs3  dxgi.lib d2d1.lib dwrite.lib)
 	endif()
-	target_link_libraries(rpcs3  avformat.lib avcodec.lib avutil.lib swresample.lib swscale.lib png16_static ${wxWidgets_LIBRARIES} ${OPENAL_LIBRARY} ${ADDITIONAL_LIBS})
+	target_link_libraries(rpcs3  avformat.lib avcodec.lib avutil.lib swresample.lib swscale.lib png16_static ${OPENAL_LIBRARY} ${ADDITIONAL_LIBS})
 else()
-	target_link_libraries(rpcs3  ${wxWidgets_LIBRARIES} ${OPENAL_LIBRARY} ${GLEW_LIBRARY} ${OPENGL_LIBRARIES})
+	target_link_libraries(rpcs3  ${OPENAL_LIBRARY} ${GLEW_LIBRARY} ${OPENGL_LIBRARIES})
 	target_link_libraries(rpcs3  -ldl ${ZLIB_LIBRARIES} ${ADDITIONAL_LIBS})
 	if (USE_SYSTEM_FFMPEG)
 		link_libraries(${FFMPEG_LIBRARY_DIR})
@@ -237,7 +237,7 @@ if(LLVM_FOUND)
 	target_link_libraries(rpcs3  ${LLVM_LIBS})
 endif()
 
-target_link_libraries(rpcs3 rsx_decompiler shader_code)
+target_link_libraries(rpcs3 rsx_decompiler shader_code Qt5::Widgets)
 
 set_target_properties(rpcs3 PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "${RPCS3_SRC_DIR}/stdafx.h")
 cotire(rpcs3)

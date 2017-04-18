@@ -4,7 +4,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
-#include "systemtab.h"
+#include "SystemTab.h"
 
 SystemTab::SystemTab(QWidget *parent) : QWidget(parent)
 {

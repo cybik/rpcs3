@@ -12,7 +12,7 @@
 #include <dxgi1_4.h>
 #endif
 
-#include "graphicstab.h"
+#include "GraphicsTab.h"
 
 GraphicsTab::GraphicsTab(QWidget *parent) : QWidget(parent)
 {

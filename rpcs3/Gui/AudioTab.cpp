@@ -4,7 +4,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
-#include "audiotab.h"
+#include "AudioTab.h"
 
 AudioTab::AudioTab(QWidget *parent) : QWidget(parent)
 {

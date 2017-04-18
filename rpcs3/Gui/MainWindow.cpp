@@ -6,13 +6,13 @@
 #include <QVBoxLayout>
 #include <QDockWidget>
 
-#include "gamelistframe.h"
-#include "debuggerframe.h"
-#include "logframe.h"
-#include "settingsdialog.h"
-#include "padsettingsdialog.h"
+#include "GameListFrame.h"
+#include "DebuggerFrame.h"
+#include "LogFrame.h"
+#include "SettingsDialog.h"
+#include "PadSettingsDialog.h"
 #include "AutoPauseSettingsDialog.h"
-#include "mainwindow.h"
+#include "MainWindow.h"
 #include "rpcs3_version.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)

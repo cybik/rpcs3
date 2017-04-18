@@ -1,4 +1,4 @@
-#include "logframe.h"
+#include "LogFrame.h"
 
 LogFrame::LogFrame(QWidget *parent) : QDockWidget(tr("Log"), parent)
 {

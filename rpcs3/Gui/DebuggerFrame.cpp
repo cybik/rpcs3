@@ -1,4 +1,4 @@
-#include "debuggerframe.h"
+#include "DebuggerFrame.h"
 
 DebuggerFrame::DebuggerFrame(QWidget *parent) : QDockWidget(tr("Debugger"), parent)
 {

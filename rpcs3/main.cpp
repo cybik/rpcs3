@@ -4,7 +4,7 @@
 #include <QApplication>
 #include <QDebug>
 #include <QDesktopWidget>
-#include "GUI/mainwindow.h"
+#include "Gui/MainWindow.h"
 
 #include "stdafx.h"
 #include "Emu/System.h"
